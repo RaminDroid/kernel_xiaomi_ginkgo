@@ -20,7 +20,7 @@ jobs:
 
       - name: Clone Cuh-KerneL Repository
         run: |
-          git clone --depth 1 https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ secrets.USERNAME }}/Cuh-KerneL.git -b fifteenKSU kernel
+          git clone --depth 1 https://github.com/xiihaiqal/kernel_xiaomi_ginkgo.git -b fourteenKSU kernel
           cd kernel
           chmod 777 build.sh
           ./build.sh

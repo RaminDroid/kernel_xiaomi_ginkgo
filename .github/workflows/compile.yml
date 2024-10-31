@@ -30,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: kernel-build
-          path: kernel/output/*  # Adjust this path to match where your build output is stored
+          path: kernel/*  # Adjust this path to match where your build output is stored

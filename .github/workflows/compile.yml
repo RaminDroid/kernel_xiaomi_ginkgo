@@ -1,12 +1,7 @@
 name: Build Kernel
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,7 +13,7 @@ jobs:
 
       - name: Clone Cuh-KerneL Repository
         run: |
-          git clone --depth 1 https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ secrets.USERNAME }}/Cuh-KerneL.git -b fourteenKSU kernel
+          git clone --depth 1 https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ secrets.USERNAME }}/Cuh-KerneL.git -b fifteenKSU kernel
           cd kernel
           chmod 777 build.sh
           ./build.sh

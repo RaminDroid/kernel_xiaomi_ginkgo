@@ -10,6 +10,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      - name: Remove existing kernel directory (if it exists)
+        run: |
+          if [ -d "kernel" ]; then
+            echo "Removing existing kernel directory."
+            rm -rf kernel
+          fi
 
       - name: Clone Cuh-KerneL Repository
         run: |

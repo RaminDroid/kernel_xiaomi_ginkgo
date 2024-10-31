@@ -1,69 +1,31 @@
-name: Compile Kernel
+name: Build Kernel
 
 on:
-  workflow_dispatch:
-    upload_artifact:
-      description: 'Upload artifact'
-      required: true
-      default: true
-    create_release:
-      description: 'Create release'
-      required: true
-      default: true
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Configuring git environment
-        run: |
-          git config --global user.name "xiihaiqal"
-          git config --global user.email "admin@kingkongvpn.com.my"
-
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Remove existing kernel directory (if it exists)
+      - name: Clone Cuh-KerneL Repository
         run: |
-          if [ -d "kernel" ]; then
-            echo "Removing existing kernel directory."
-            rm -rf kernel
-          fi
-
-      - name: Building Kernel
-        run: |
-          git clone --depth 1 https://github.com/xiihaiqal/kernel_xiaomi_ginkgo.git -b fourteenKSU kernel
+          git clone --depth 1 https://${{ secrets.USERNAME }}:${{ secrets.TOKEN }}@github.com/${{ secrets.USERNAME }}/Cuh-KerneL.git -b fourteenKSU kernel
           cd kernel
-          chmod +x build.sh
+          chmod 777 build.sh
           ./build.sh
 
-      - name: Find ZIP files
-        id: find-zip
-        run: |
-          # Search for any .zip files in the kernel directory
-          ZIP_FILES=$(find kernel -name '*.zip' | head -n 1) # Get the first ZIP file found
-          if [ -z "$ZIP_FILES" ]; then
-            echo "No ZIP file found!" && exit 1
-          else
-            echo "Found ZIP file: $ZIP_FILES"
-            echo "zip_path=$ZIP_FILES" >> $GITHUB_ENV
-          fi
-
-      - name: Upload Artifact
-        if: ${{ inputs.upload_artifact }}
-        uses: actions/upload-artifact@v4.3.0
+      - name: Upload Build Artifact
+        if: success()
+        uses: actions/upload-artifact@v3
         with:
-          name: "kernel_artifact_${{ github.run_number }}"
-          path: ${{ env.zip_path }}
-          if-no-files-found: error
-
-      - name: Create Release
-        id: create_release
-        uses: xiihaiqal/action-gh-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          DRAFT: ${{ inputs.create_release }}
-        with:
-          files: ${{ env.zip_path }}
+          name: kernel-build
+          path: kernel/output/*  # Adjust this path to match where your build output is stored

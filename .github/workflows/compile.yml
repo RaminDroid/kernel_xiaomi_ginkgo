@@ -1,4 +1,4 @@
-name: Build Kernel
+name: Compile Kernel
 
 on:
   workflow_dispatch:
@@ -8,26 +8,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Remove existing kernel directory (if it exists)
+      - name: Configuring git environmert.
         run: |
-          if [ -d "kernel" ]; then
-            echo "Removing existing kernel directory."
-            rm -rf kernel
-          fi
-
-      - name: Clone Cuh-KerneL Repository
+           git config --global user.name note8hype
+           git config --global user.email note8@hype.com
+           
+      - name: Building Kernel.
         run: |
-          git clone --depth 1 https://github.com/xiihaiqal/kernel_xiaomi_ginkgo.git -b fourteenKSU kernel
-          cd kernel
-          chmod 777 build.sh
-          ./build.sh
+            git clone --depth 1 https://${{ secrets.USERNAME }
+            cd kernel
+            chmod 777 build.sh
+            ./build.sh
 
-      - name: Upload Build Artifact
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: kernel-build
-          path: kernel/*.zip  # Adjust this path to match where your build output is stored
+      - name: Uploading ZIP.
+        run: |
+            cd kernel
+            curl -T *.zip https://pixeldrain.com/api/file/ && echo ""
